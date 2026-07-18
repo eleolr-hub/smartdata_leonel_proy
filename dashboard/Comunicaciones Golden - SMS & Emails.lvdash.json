@@ -1,0 +1,846 @@
+{
+  "datasets": [
+    {
+      "name": "golden_sms",
+      "displayName": "Golden SMS",
+      "config": {
+        "version": "1.1",
+        "source": "catalog_au.golden.golden_sms",
+        "dimensions": [
+          {
+            "name": "cliente",
+            "expr": "cliente"
+          },
+          {
+            "name": "producto",
+            "expr": "producto"
+          },
+          {
+            "name": "remitente",
+            "expr": "usuario_creacion"
+          },
+          {
+            "name": "periodo",
+            "expr": "periodo"
+          },
+          {
+            "name": "mes",
+            "expr": "mes"
+          },
+          {
+            "name": "anio",
+            "expr": "anio"
+          }
+        ],
+        "measures": [
+          {
+            "name": "total_sms",
+            "expr": "SUM(total_sms)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "golden_email",
+      "displayName": "Golden Email",
+      "config": {
+        "version": "1.1",
+        "source": "catalog_au.golden.golden_email",
+        "dimensions": [
+          {
+            "name": "cliente",
+            "expr": "cliente"
+          },
+          {
+            "name": "sender",
+            "expr": "senderaddress"
+          },
+          {
+            "name": "mes",
+            "expr": "mes"
+          },
+          {
+            "name": "anio",
+            "expr": "anio"
+          },
+          {
+            "name": "periodo",
+            "expr": "CONCAT(CAST(anio AS STRING), '-', LPAD(CAST(mes AS STRING), 2, '0'))"
+          }
+        ],
+        "measures": [
+          {
+            "name": "total_emails",
+            "expr": "SUM(total)"
+          },
+          {
+            "name": "entregado",
+            "expr": "SUM(entregado)"
+          },
+          {
+            "name": "fallido",
+            "expr": "SUM(fallido)"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "da237b65",
+      "displayName": "SMS",
+      "layout": [
+        {
+          "widget": {
+            "name": "sms_header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 📱 Análisis de SMS - Golden Layer\n",
+                "Volumen de SMS por cliente, producto y remitente, desglosado por mes."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "sms_por_cliente",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "cliente",
+                      "expression": "`cliente`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "SMS por Cliente y Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "cliente",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "sms_por_producto",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "SMS por Producto y Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "sms_por_remitente",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "remitente",
+                      "expression": "`remitente`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "SMS por Remitente y Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "remitente",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 12,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "sms_detalle",
+      "displayName": "SMS - Detalle por Cliente",
+      "layout": [
+        {
+          "widget": {
+            "name": "header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 📱 SMS por Cliente — Desglose por Producto y Mes\n",
+                "Cada gráfica muestra los SMS enviados por producto para un cliente específico, mes a mes."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "bi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`cliente` IN ('BANCO INDUSTRIAL')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "BANCO INDUSTRIAL — Productos por Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "credomatic",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`cliente` IN ('CREDOMATIC')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "CREDOMATIC — Productos por Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "promerica",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`cliente` IN ('BANCO PROMERICA')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "BANCO PROMERICA — Productos por Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "gt",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`cliente` IN ('BANCO G&T')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "BANCO G&T — Productos por Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "azteca",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_sms",
+                  "fields": [
+                    {
+                      "name": "producto",
+                      "expression": "`producto`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_sms)",
+                      "expression": "MEASURE(`total_sms`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`cliente` IN ('BANCO AZTECA')"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "BANCO AZTECA — Productos por Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_sms)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "producto",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 16,
+            "width": 6,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "emails",
+      "displayName": "Emails",
+      "layout": [
+        {
+          "widget": {
+            "name": "email_header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 📧 Análisis de Emails - Golden Layer\n",
+                "Volumen de correos por cliente y remitente (sender), desglosado por mes."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "email_por_cliente",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_email",
+                  "fields": [
+                    {
+                      "name": "cliente",
+                      "expression": "`cliente`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_emails)",
+                      "expression": "MEASURE(`total_emails`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Emails por Cliente y Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_emails)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "cliente",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "email_por_sender",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "golden_email",
+                  "fields": [
+                    {
+                      "name": "sender",
+                      "expression": "`sender`"
+                    },
+                    {
+                      "name": "periodo",
+                      "expression": "`periodo`"
+                    },
+                    {
+                      "name": "measure(total_emails)",
+                      "expression": "MEASURE(`total_emails`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Emails por Sender y Mes",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "periodo",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_emails)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "sender",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
