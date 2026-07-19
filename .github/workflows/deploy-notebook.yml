@@ -22,7 +22,7 @@ jobs:
         mkdir -p notebooks_to_deploy
         for nb in "${NOTEBOOKS[@]}"; do
           echo "Exportando $nb en modo raw..."
-          echo "URL:"
+          echo "URL: "
           echo "$ORIGIN_HOST/api/2.0/workspace/export?path=$NOTEBOOK_BASE/$nb&format=SOURCE&direct_download=true"
           curl -s -X GET \
             -H "Authorization: Bearer $ORIGIN_TOKEN" \
