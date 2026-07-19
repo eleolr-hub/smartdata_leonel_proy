@@ -208,7 +208,7 @@ jobs:
             },
             {
               "task_key": "Ingest_SMS_Nuevo",
-              "description": "Ejecuta notebook Ingest_SMS_Nuevo",
+              "description": "Ejecuta notebook  Ingest_SMS_Nuevo",
               "notebook_task": {
                 "notebook_path": "/smartdata/scripts/main/1.04.Ingest_SMS_Nuevo",
                 "source": "WORKSPACE",
